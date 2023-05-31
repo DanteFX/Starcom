@@ -10,6 +10,8 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -22,7 +24,8 @@ public class ActivitiesProgressPresenter extends Fragment {
 
     private ActivitiesViewBinding binding;
     private Administra administra;
-    private SimpleCursorAdapter adaptador;
+    private TareasProgressAdapter adaptador;
+    private RecyclerView recyclerView;
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -61,13 +64,10 @@ public class ActivitiesProgressPresenter extends Fragment {
         administra = new Administra(getContext());
         Cursor cursor = administra.obtenerNombreTarea();
 
-        //Se debe mostrar solo el nombre pero me aparecen lso nombres de las demas columnas
-        String[] desde = {"nombre"};
-        int[] a = {R.id.rowFirstText};
-        adaptador = new SimpleCursorAdapter(requireContext(), R.layout.row_first, cursor, desde, a, 0);
-
-        ListView listaTareas = binding.listTareasFirst;
-        listaTareas.setAdapter(adaptador);
+        recyclerView = binding.listTareasFirst;
+        adaptador = new TareasProgressAdapter(cursor);
+        recyclerView.setAdapter(adaptador);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
        /* Spinner spinnerEtapa = view.findViewById(R.id.spinnerPrioridad);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.etapa, android.R.layout.simple_spinner_item);

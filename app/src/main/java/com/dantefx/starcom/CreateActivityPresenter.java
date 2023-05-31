@@ -16,7 +16,9 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import android.widget.TextView;
 
@@ -51,6 +53,11 @@ public class CreateActivityPresenter extends Fragment {
                 String prioridad = spinner.getSelectedItem().toString();
                 String fechaEntrega = selectedDateTV.getText().toString();
 
+                // Agregar la fecha de inicio automaticamente desde el sistema
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                String fechaInicio = dateFormat.format(calendar.getTime());
+
                 // Verificar que los campos no sean nulos o vacíos
                 if (nombre.isEmpty() || descripcion.isEmpty() || prioridad.isEmpty() || fechaEntrega.isEmpty()) {
                     Toast.makeText(getContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
@@ -58,7 +65,7 @@ public class CreateActivityPresenter extends Fragment {
                 }
 
                 Administra bdTareas = new Administra(getContext());
-                long id = bdTareas.insertarTarea(nombre, descripcion, estado, prioridad, fechaEntrega);
+                long id = bdTareas.insertarTarea(nombre, descripcion, estado, prioridad, fechaEntrega, fechaInicio);
 
                 if (id > 0) {
                     Toast.makeText(getContext(), "REGISTRO GUARDADO", Toast.LENGTH_SHORT).show();
@@ -67,7 +74,7 @@ public class CreateActivityPresenter extends Fragment {
                     Cursor nuevoCursor = bdTareas.obtenerTareas();
 
                     // Actualizar el adaptador con el nuevo Cursor
-             //       tareasAdapter.swapCursor(nuevoCursor);
+                    //tareasAdapter.swapCursor(nuevoCursor);
                 } else {
                     Toast.makeText(getContext(), "ERROR AL GUARDAR EL REGISTRO", Toast.LENGTH_LONG).show();
                 }

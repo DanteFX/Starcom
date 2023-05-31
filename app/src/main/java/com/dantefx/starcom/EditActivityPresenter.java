@@ -42,9 +42,7 @@ public class EditActivityPresenter extends Fragment {
 
     private TareasAdapter tareasAdapter;
 
-    public EditActivityPresenter(){
-
-    }
+    public EditActivityPresenter(){}
 
     public static EditActivityPresenter newInstance (Integer position1){
         EditActivityPresenter fragment = new EditActivityPresenter();
@@ -79,16 +77,16 @@ public class EditActivityPresenter extends Fragment {
 
 
                 // Obtener el ID del registro que se va a actualizar
-
                 Administra bdTareas = new Administra(getContext());
-                System.out.println("AAAAAAAAAGGGGGGGGGGGGGGGGGGGGGGG" + bdTareas.actualizarTarea(position1,nombre,descripcion,
-                        prioridad,fechaEntrega));
+
 
                 boolean actualizacionExitosa = bdTareas.actualizarTarea(position1, nombre, descripcion, prioridad, fechaEntrega);
 
+                System.out.println(actualizacionExitosa);
+
                 try {
                     if (actualizacionExitosa) {
-                        Toast.makeText(getContext(), "REGISTRO ACTUALIZADO", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "REGISTRO ACTUALIZADO" + position1, Toast.LENGTH_SHORT).show();
                         limpiar();
 
                         Cursor nuevoCursor = bdTareas.obtenerTareas();
@@ -96,7 +94,7 @@ public class EditActivityPresenter extends Fragment {
                         // Actualizar el adaptador con el nuevo Cursor
                         tareasAdapter.swapCursor(nuevoCursor);
                     } else {
-                        Toast.makeText(getContext(), "ERROR AL ACTUALIZAR EL REGISTRO", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "ERROR AL ACTUALIZAR EL REGISTRO"  + position1, Toast.LENGTH_LONG).show() ;
                     }
                 }catch (Exception e) {
                     e.printStackTrace();

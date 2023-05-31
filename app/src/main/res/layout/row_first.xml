@@ -30,12 +30,13 @@
         app:layout_constraintTop_toBottomOf="@id/rowFirstText"/>
 
     <Spinner
-        android:id="@+id/spinnerPrioridad"
+        android:id="@+id/spinnerEtapa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/activeProgress"
         app:layout_constraintStart_toStartOf="@id/activeProgress"
         app:layout_constraintEnd_toEndOf="@id/activeProgress"
         android:layout_marginTop="16dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
