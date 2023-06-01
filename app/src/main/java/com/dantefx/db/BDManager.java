@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+//Base de datos
 public class BDManager extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 2;
