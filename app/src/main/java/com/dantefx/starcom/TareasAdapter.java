@@ -86,7 +86,7 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
                     if (cursor != null && cursor.moveToPosition(position1)) {
                         int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
                         Administra bdTareas = new Administra(context);
-                        bdTareas.delete(id);
+                        bdTareas.borrarTarea(id);
                     }
                 }
             });

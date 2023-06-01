@@ -9,34 +9,31 @@
     <TextView
         android:id="@+id/rowFirstText"
         android:layout_width="?android:attr/listPreferredItemHeight"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="184dp"
         android:gravity="center"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <Spinner
+        android:id="@+id/spinnerEtapa"
+        android:background="#7432C5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/rowFirstText"
+        app:layout_constraintStart_toStartOf="@id/activeProgress"
+        app:layout_constraintEnd_toEndOf="@id/activeProgress"
+        android:layout_marginTop="16dp"/>
 
     <ProgressBar
         android:id="@+id/activeProgress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="300dp"
         android:layout_height="30dp"
-        android:layout_weight="1"
         android:progress="30"
         android:progressDrawable="@drawable/rounded_corners_progress_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rowFirstText"/>
-
-    <Spinner
-        android:id="@+id/spinnerEtapa"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activeProgress"
-        app:layout_constraintStart_toStartOf="@id/activeProgress"
-        app:layout_constraintEnd_toEndOf="@id/activeProgress"
-        android:layout_marginTop="16dp"/>
-
+        app:layout_constraintTop_toBottomOf="@id/spinnerEtapa"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,7 +11,6 @@ public class BDManager extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NOMBRE = "starcom.db";
-    public static final String TABLE_USUARIO = "USUARIO";
     public static final String TABLE_TAREA = "TAREA";
 
     public BDManager(@Nullable Context context) {
@@ -20,8 +19,6 @@ public class BDManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_USUARIO + "(" +
-                "nombre TEXT NOT NULL)");
 
         db.execSQL("CREATE TABLE " + TABLE_TAREA + "(" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT ," +
@@ -30,8 +27,7 @@ public class BDManager extends SQLiteOpenHelper {
                 "estado BOOLEAN(1) NOT NULL," +
                 "fechaEntrega TEXT NOT NULL," +
                 "prioridad TEXT NOT NULL," +
-                "usuario TEXT," +
-                "FOREIGN KEY (usuario) REFERENCES TABLE_USUARIO(id))");
+                "usuario TEXT)");
     }
 
     @Override
@@ -40,10 +36,9 @@ public class BDManager extends SQLiteOpenHelper {
             // Agregar los nuevos campos a la tabla de tareas
             sqLiteDatabase.execSQL("ALTER TABLE " + TABLE_TAREA + " ADD COLUMN fechaInicio TEXT");
             sqLiteDatabase.execSQL("ALTER TABLE " + TABLE_TAREA + " ADD COLUMN fechaFin TEXT");
+            sqLiteDatabase.execSQL("ALTER TABLE " + TABLE_TAREA + " ADD COLUMN progreso INTEGER");
         }
 
-        // Eliminar la tabla de usuarios si existe
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_USUARIO);
 
     }
 
