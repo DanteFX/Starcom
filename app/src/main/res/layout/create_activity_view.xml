@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".CreateActivityPresenter">
 
-
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
@@ -99,7 +98,7 @@
 
     <TextView
         android:id="@+id/idTVSelectedDate"
-        android:layout_width="231dp"
+        android:layout_width="205dp"
         android:layout_height="41dp"
         android:layout_above="@id/idBtnPickDate"
         android:layout_centerInParent="true"
@@ -115,6 +114,38 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/idBtnPickDate"
         tools:layout_editor_absoluteX="1dp" />
+
+    <TextView
+        android:id="@+id/idTVSelectedNotification"
+        android:layout_width="205dp"
+        android:layout_height="41dp"
+        android:layout_above="@id/idBtnPickDate"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Notificame"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/idBtnPickDate"
+        tools:layout_editor_absoluteX="205dp" />
+
+    <Button
+        android:id="@+id/btn_createEvent"
+        android:layout_width="114dp"
+        android:layout_height="88dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="206dp"
+        android:background="#00FFFFFF"
+        android:text="Crear notifación"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        tools:layout_editor_absoluteX="281dp"
+        tools:layout_editor_absoluteY="477dp" />
 
     <ImageButton
         android:id="@+id/idBtnPickDate"
