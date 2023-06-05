@@ -100,7 +100,7 @@ public class CreateActivityPresenter extends Fragment {
         String CHANNEL_ID = "my_channel_id";
 
         // Obtener el tiempo de recordatorio en milisegundos (suponiendo que está en minutos)
-        long tiempoRecordatorio = Long.parseLong(recordatorio) * 60 * 1000;
+        long tiempoRecordatorio = Long.parseLong(recordatorio) * 60 * 60 * 1000;
 
         // Crear una intención para la notificación
         Intent intent = new Intent(getContext(), CreateActivityPresenter.class);
