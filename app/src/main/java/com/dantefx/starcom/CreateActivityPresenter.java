@@ -79,7 +79,7 @@ public class CreateActivityPresenter extends Fragment {
                 long id = bdTareas.insertarTarea(nombre, descripcion, estado, prioridad, fechaEntrega, fechaInicio, recordatorio);
 
                 if (id > 0) {
-                    Toast.makeText(getContext(), "REGISTRO GUARDADO", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "TAREA GUARDADA", Toast.LENGTH_SHORT).show();
                     limpiar();
                     crearNotificacion(id, nombre, String.valueOf(recordatorio));
                     Cursor nuevoCursor = bdTareas.obtenerTareas();
@@ -87,7 +87,7 @@ public class CreateActivityPresenter extends Fragment {
                     // Actualizar el adaptador con el nuevo Cursor
                     //tareasAdapter.swapCursor(nuevoCursor);
                 } else {
-                    Toast.makeText(getContext(), "ERROR AL GUARDAR EL REGISTRO", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "ERROR AL GUARDAR LA TAREA", Toast.LENGTH_LONG).show();
                 }
             }
         });
