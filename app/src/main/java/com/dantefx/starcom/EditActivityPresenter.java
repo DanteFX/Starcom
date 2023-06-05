@@ -32,7 +32,7 @@ public class EditActivityPresenter extends Fragment {
     private TextInputLayout campoNombre;
     private TextInputLayout campoDescripcion;
     private Spinner spinner;
-    int estado = 1;
+
 
 
     private int position1;
