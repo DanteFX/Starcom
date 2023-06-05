@@ -129,8 +129,13 @@ public class CreateActivityPresenter extends Fragment {
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + tiempoRecordatorio, pendingIntent);
 
         // Mostrar la notificación
+        Random random = new Random();
+        int id = random.nextInt(9999-1000)+1000;
+
         NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify((int) tareaId, builder.build());
+        assert notificationManager != null;
+        notificationManager.notify(id,builder.build());
+
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
