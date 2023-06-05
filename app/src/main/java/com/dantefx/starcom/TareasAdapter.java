@@ -34,7 +34,7 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
         public TextView tvFechaEntrega;
         public ImageButton buttonEditar;
 
-        
+
         public ImageButton buttonEliminar;
 
 

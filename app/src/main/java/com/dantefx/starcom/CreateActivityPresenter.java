@@ -34,7 +34,7 @@ public class CreateActivityPresenter extends Fragment {
     private TextInputLayout campoNombre;
     private TextInputLayout campoDescripcion;
     private Spinner spinner;
-    int estado = 1;
+    int estado = 0;
 
     private TareasAdapter tareasAdapter;
 
@@ -52,6 +52,8 @@ public class CreateActivityPresenter extends Fragment {
                 String descripcion = campoDescripcion.getEditText().getText().toString();
                 String prioridad = spinner.getSelectedItem().toString();
                 String fechaEntrega = selectedDateTV.getText().toString();
+                int recordatorio = 1;
+
 
                 // Agregar la fecha de inicio automaticamente desde el sistema
                 Calendar calendar = Calendar.getInstance();
@@ -66,7 +68,7 @@ public class CreateActivityPresenter extends Fragment {
                 }
 
                 Administra bdTareas = new Administra(getContext());
-                long id = bdTareas.insertarTarea(nombre, descripcion, estado, prioridad, fechaEntrega, fechaInicio);
+                long id = bdTareas.insertarTarea(nombre, descripcion, estado, prioridad, fechaEntrega, fechaInicio, recordatorio);
 
                 if (id > 0) {
                     Toast.makeText(getContext(), "REGISTRO GUARDADO", Toast.LENGTH_SHORT).show();

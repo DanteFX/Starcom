@@ -24,7 +24,6 @@ public class ActivitiesProgressPresenter extends Fragment {
 
     private ActivitiesViewBinding binding;
     private Administra administra;
-
     private TareasProgressAdapter adaptador;
     private RecyclerView recyclerView;
     @Override
