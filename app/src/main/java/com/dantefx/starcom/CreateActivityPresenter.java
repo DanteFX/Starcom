@@ -1,10 +1,18 @@
 package com.dantefx.starcom;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -73,7 +81,7 @@ public class CreateActivityPresenter extends Fragment {
                 if (id > 0) {
                     Toast.makeText(getContext(), "REGISTRO GUARDADO", Toast.LENGTH_SHORT).show();
                     limpiar();
-
+                    crearNotificacion(id, nombre, String.valueOf(recordatorio));
                     Cursor nuevoCursor = bdTareas.obtenerTareas();
 
                     // Actualizar el adaptador con el nuevo Cursor
@@ -85,6 +93,44 @@ public class CreateActivityPresenter extends Fragment {
         });
 
         return view;
+    }
+
+    private void crearNotificacion(long tareaId, String nombreTarea, String recordatorio) {
+        // Definir el identificador del canal de notificación
+        String CHANNEL_ID = "my_channel_id";
+
+        // Obtener el tiempo de recordatorio en milisegundos (suponiendo que está en minutos)
+        long tiempoRecordatorio = Long.parseLong(recordatorio) * 60 * 1000;
+
+        // Crear una intención para la notificación
+        Intent intent = new Intent(getContext(), CreateActivityPresenter.class);
+        intent.putExtra("tarea_id", tareaId);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Crear un canal de notificación (solo es necesario hacerlo una vez)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence channelName = "My Channel";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, channelName, importance);
+            NotificationManager notificationManager = getContext().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        // Construir la notificación
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
+                .setContentTitle("Recordatorio de tarea")
+                .setContentText("La tarea '" + nombreTarea + "' está pendiente")
+                .setSmallIcon(R.drawable.yoga48)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        // Programar la notificación para el tiempo de recordatorio
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + tiempoRecordatorio, pendingIntent);
+
+        // Mostrar la notificación
+        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify((int) tareaId, builder.build());
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
