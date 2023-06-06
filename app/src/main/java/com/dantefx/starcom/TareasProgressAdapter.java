@@ -45,8 +45,7 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
             super(itemView);
             tvNombre = itemView.findViewById(R.id.rowFirstText);
             progreso = itemView.findViewById(R.id.activeProgress);
-            etapa = itemView.findViewById(R.id.spinnerEtapa
-            );
+            etapa = itemView.findViewById(R.id.spinnerEtapa);
         }
     }
 
@@ -103,23 +102,11 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
         return 0;
     }
 
-    public void progressChange(int pos,ViewHolder holder){
-        switch (pos) {
-            case 0:
-                holder.progreso.setProgress(25,true);
-                break;
-            case 1:
-                holder.progreso.setProgress(50,true);
-                break;
-            case 2:
-                holder.progreso.setProgress(75,true);
-                break;
-            case 3:
-                holder.progreso.setProgress(100,true);
-                break;
-        }
-
+    public void progressChange(int pos, ViewHolder holder) {
+        int progreso = calcularProgreso(pos);
+        holder.progreso.setProgress(progreso, true);
     }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
         ViewHolder holder = (ViewHolder) parent.getTag();
@@ -131,40 +118,62 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
         // Calcular el progreso en función de las etapas
         int progreso = calcularProgreso(pos);
 
-        // Actualizar el campo de progreso en la tabla "tareas" en la base de datos
-        ContentValues progresoValues = new ContentValues();
-        progresoValues.put("progreso", progreso);
+        // Obtener el progreso actual en la base de datos
+        int progresoActual = obtenerProgresoDesdeBaseDeDatos(idTarea);
 
-        String whereClause = "id=?";
-        String[] whereArgs = new String[]{String.valueOf(idTarea)};
-        SQLiteDatabase db = getWritableDatabase(context);
-        db.update("TAREA", progresoValues, whereClause, whereArgs);
+        // Verificar si el progreso ha cambiado
+        if (progreso != progresoActual) {
+            // Actualizar el campo de progreso en la tabla "tareas" en la base de datos
+            ContentValues progresoValues = new ContentValues();
+            progresoValues.put("progreso", progreso);
 
-        if (pos == 3) {
-            // La tarea ha llegado a la etapa de "Cierre"
-            String fechaActual = obtenerFechaActual();
-
-            // Actualizar la columna "fechaFin" en la base de datos
-            ContentValues values = new ContentValues();
-            values.put("fechaFin", fechaActual);
-            values.put("estado", 1);
-            db.update("TAREA", values, whereClause, whereArgs);
-
-
-            String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
-            String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio"));
-            String fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("fechaFin"));
-            long tiempoTranscurrido = calcularTiempoTranscurridoEnDias(fechaInicio, fechaFin);
-
-            // Mostrar un mensaje con el tiempo transcurrido en días
-            String mensaje = "La tarea '" + nombre + "' ha sido completada en " + tiempoTranscurrido + " días.";
-            Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
-
-        }else {
-            ContentValues values = new ContentValues();
-            values.put("progreso", progreso);
-
+            String whereClause = "id=?";
+            String[] whereArgs = new String[]{String.valueOf(idTarea)};
+            SQLiteDatabase db = getWritableDatabase(context);
             db.update("TAREA", progresoValues, whereClause, whereArgs);
+
+            if (pos == 3) {
+                // La tarea ha llegado a la etapa de "Cierre"
+                String fechaActual = obtenerFechaActual();
+
+                // Actualizar la columna "fechaFin" en la base de datos
+                ContentValues values = new ContentValues();
+                values.put("fechaFin", fechaActual);
+                values.put("estado", 1);
+                db.update("TAREA", values, whereClause, whereArgs);
+
+                // Obtener los datos de la tarea actual
+                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
+                String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio"));
+                String fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("fechaFin"));
+                long tiempoTranscurrido = calcularTiempoTranscurridoEnDias(fechaInicio, fechaFin);
+
+                // Mostrar un mensaje con el tiempo transcurrido en días
+                String mensaje = "La tarea '" + nombre + "' ha sido completada en " + tiempoTranscurrido + " días.";
+                Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+            } else {
+                // Actualizar el campo de progreso en la tabla "tareas" en la base de datos
+                ContentValues values = new ContentValues();
+                values.put("progreso", progreso);
+                db.update("TAREA", values, whereClause, whereArgs);
+            }
+        }
+    }
+
+    private int obtenerProgresoDesdeBaseDeDatos(int idTarea) {
+        // Realizar una consulta a la base de datos para obtener el progreso actual de la tarea
+        SQLiteDatabase db = getReadableDatabase(context);
+        String[] columns = {"progreso"};
+        String selection = "id=?";
+        String[] selectionArgs = new String[]{String.valueOf(idTarea)};
+        Cursor cursor = db.query("TAREA", columns, selection, selectionArgs, null, null, null);
+        if (cursor.moveToFirst()) {
+            int progreso = cursor.getInt(cursor.getColumnIndexOrThrow("progreso"));
+            cursor.close();
+            return progreso;
+        } else {
+            cursor.close();
+            return 0; // Valor predeterminado si no se encuentra el progreso en la base de datos
         }
     }
 
@@ -188,7 +197,6 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
         return progreso;
     }
 
-
     private String obtenerFechaActual() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Date fechaActual = new Date();
@@ -200,15 +208,20 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
         return dbHelper.getWritableDatabase();
     }
 
+    private SQLiteDatabase getReadableDatabase(Context context) {
+        BDManager dbHelper = new BDManager(context);
+        return dbHelper.getReadableDatabase();
+    }
 
     @Override
-    public void onNothingSelected(AdapterView<?> arg0)
-    {
+    public void onNothingSelected(AdapterView<?> arg0) {
 
     }
+
     @Override
     public int getItemCount() {
         return cursor != null ? cursor.getCount() : 0;
     }
 
 }
+
