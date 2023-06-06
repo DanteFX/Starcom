@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateActivityPresenter">
+    tools:context=".EditActivityPresenter">
+
 
     <TextView
         android:id="@+id/textView2"
@@ -90,7 +91,7 @@
         android:background="#1f84bf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/idTVSelectedDate" />
+        app:layout_constraintBottom_toTopOf="@+id/textView6" />
 
 
     <!--on below line we are creating
@@ -98,7 +99,7 @@
 
     <TextView
         android:id="@+id/idTVSelectedDate"
-        android:layout_width="205dp"
+        android:layout_width="231dp"
         android:layout_height="41dp"
         android:layout_above="@id/idBtnPickDate"
         android:layout_centerInParent="true"
@@ -116,36 +117,28 @@
         tools:layout_editor_absoluteX="1dp" />
 
     <TextView
-        android:id="@+id/idTVSelectedNotification"
-        android:layout_width="205dp"
-        android:layout_height="41dp"
-        android:layout_above="@id/idBtnPickDate"
-        android:layout_centerInParent="true"
-        android:layout_margin="20dp"
-        android:layout_marginBottom="24dp"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="Notificame"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/idBtnPickDate"
-        tools:layout_editor_absoluteX="205dp" />
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="50dp"
+        android:layout_marginBottom="52dp"
+        android:text="Recordatorio"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@id/idSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/btn_createEvent"
-        android:layout_width="114dp"
-        android:layout_height="88dp"
-        android:layout_centerInParent="true"
-        android:layout_margin="206dp"
-        android:background="#00FFFFFF"
-        android:text="Crear notifación"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        tools:layout_editor_absoluteX="281dp"
-        tools:layout_editor_absoluteY="477dp" />
+    <Spinner
+        android:id="@+id/spinnerRecordatorio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="44dp"
+        android:background="#1f84bf"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@id/textView7"
+        android:layout_marginBottom="-30dp"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageButton
         android:id="@+id/idBtnPickDate"
