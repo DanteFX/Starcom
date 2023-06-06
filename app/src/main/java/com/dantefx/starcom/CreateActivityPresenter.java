@@ -27,6 +27,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Random;
 
 import android.widget.TextView;
 
@@ -76,10 +77,10 @@ public class CreateActivityPresenter extends Fragment {
                 }
 
                 Administra bdTareas = new Administra(getContext());
-                long id = bdTareas.insertarTarea(nombre, descripcion, estado, prioridad, fechaEntrega, fechaInicio, recordatorio);
+                  long id = bdTareas.insertarTarea(nombre, descripcion, estado, prioridad, fechaEntrega, fechaInicio, recordatorio);
 
                 if (id > 0) {
-                    Toast.makeText(getContext(), "TAREA GUARDADA", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "REGISTRO GUARDADO", Toast.LENGTH_SHORT).show();
                     limpiar();
                     crearNotificacion(id, nombre, String.valueOf(recordatorio));
                     Cursor nuevoCursor = bdTareas.obtenerTareas();
@@ -87,7 +88,7 @@ public class CreateActivityPresenter extends Fragment {
                     // Actualizar el adaptador con el nuevo Cursor
                     //tareasAdapter.swapCursor(nuevoCursor);
                 } else {
-                    Toast.makeText(getContext(), "ERROR AL GUARDAR LA TAREA", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "ERROR AL GUARDAR EL REGISTRO", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -100,12 +101,12 @@ public class CreateActivityPresenter extends Fragment {
         String CHANNEL_ID = "my_channel_id";
 
         // Obtener el tiempo de recordatorio en milisegundos (suponiendo que está en minutos)
-        long tiempoRecordatorio = Long.parseLong(recordatorio) * 60 * 60 * 1000;
+        long tiempoRecordatorio = Long.parseLong(recordatorio) * 60 * 1000;
 
         // Crear una intención para la notificación
         Intent intent = new Intent(getContext(), CreateActivityPresenter.class);
         intent.putExtra("tarea_id", tareaId);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         // Crear un canal de notificación (solo es necesario hacerlo una vez)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -151,6 +152,7 @@ public class CreateActivityPresenter extends Fragment {
                 android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
 
         pickDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
