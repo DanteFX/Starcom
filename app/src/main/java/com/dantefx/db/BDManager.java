@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 //Base de datos
 public class BDManager extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NOMBRE = "starcom.db";
     public static final String TABLE_TAREA = "TAREA";
 
@@ -28,12 +28,16 @@ public class BDManager extends SQLiteOpenHelper {
                 "estado BOOLEAN(1) NOT NULL," +
                 "fechaEntrega TEXT NOT NULL," +
                 "prioridad TEXT NOT NULL," +
+                "fechaInicio TEXT NOT NULL,"+
+                "fechaFin TEXT,"+
+                "progreso INTEGER,"+
+                "recordatorio INTEGER,"+
                 "usuario TEXT)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        if (oldVersion < 3) {
+        if (oldVersion < 2) {
             // Agregar los nuevos campos a la tabla de tareas
             sqLiteDatabase.execSQL("ALTER TABLE " + TABLE_TAREA + " ADD COLUMN fechaInicio TEXT");
             sqLiteDatabase.execSQL("ALTER TABLE " + TABLE_TAREA + " ADD COLUMN fechaFin TEXT");

@@ -34,7 +34,7 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
         public TextView tvFechaEntrega;
         public ImageButton buttonEditar;
 
-        
+
         public ImageButton buttonEliminar;
 
 
@@ -75,7 +75,13 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
             holder.tvNombre.setText(nombre);
             holder.tvDescripcion.setText(descripcion);
 
-            holder.tvEstado.setChecked(false);
+            holder.tvEstado.setClickable(false);
+
+            if(estado == 0){
+                holder.tvEstado.setChecked(false);
+            }else {
+                holder.tvEstado.setChecked(true);
+            }
             holder.tvPrioridad.setText(prioridad);
             holder.tvFechaEntrega.setText(fechaEntrega);
 

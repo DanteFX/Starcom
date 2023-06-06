@@ -1,7 +1,12 @@
 package com.dantefx.starcom;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
+import android.app.NotificationManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +19,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.dantefx.db.Administra;
+import com.dantefx.db.BDManager;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -62,22 +70,28 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
 
             holder.tvNombre.setText(nombre);
 
-  //          String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio"));
-        //    String fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("fechaFin"));
-      //      long tiempoTranscurrido = calcularTiempoTranscurridoEnDias(fechaInicio, fechaFin);
+            // Obtener el progreso de la base de datos
+            int progreso = cursor.getInt(cursor.getColumnIndexOrThrow("progreso"));
 
-          //  String mensaje = "Felicidades la tarea '" + nombre + "' tomó " + tiempoTranscurrido + " días.";
-            //Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+            // Establecer el progreso en la barra de progreso
+            holder.progreso.setProgress(progreso, true);
 
         }
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
                 R.array.etapa, android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            holder.etapa.setAdapter(adapter);
-            holder.etapa.setOnItemSelectedListener(this);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        holder.etapa.setAdapter(adapter);
+        holder.etapa.setTag(holder);
+        holder.etapa.setOnItemSelectedListener(this);
+
     }
 
+
     private long calcularTiempoTranscurridoEnDias(String fechaInicio, String fechaFin) {
+        if (fechaInicio == null || fechaFin == null) {
+            return 0;
+        }
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         try {
             Date fechaInicioObj = dateFormat.parse(fechaInicio);
@@ -91,6 +105,7 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
 
         return 0;
     }
+
     public void progressChange(int pos,ViewHolder holder){
         switch (pos) {
             case 0:
@@ -109,12 +124,87 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
 
     }
     @Override
-    public void onItemSelected(AdapterView<?> parent, View v, int pos, long id)
-    {
-        progressChange(pos,new ViewHolder(v.getRootView()
-        ));
+    public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
+        ViewHolder holder = (ViewHolder) parent.getTag();
+        progressChange(pos, holder);
 
+        // Obtener el ID de la tarea actual
+        int idTarea = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+
+        // Calcular el progreso en función de las etapas
+        int progreso = calcularProgreso(pos);
+
+        // Actualizar el campo de progreso en la tabla "tareas" en la base de datos
+        ContentValues progresoValues = new ContentValues();
+        progresoValues.put("progreso", progreso);
+
+        String whereClause = "id=?";
+        String[] whereArgs = new String[]{String.valueOf(idTarea)};
+        SQLiteDatabase db = getWritableDatabase(context);
+        db.update("TAREA", progresoValues, whereClause, whereArgs);
+
+        if (pos == 3) {
+            // La tarea ha llegado a la etapa de "Cierre"
+            String fechaActual = obtenerFechaActual();
+
+            // Actualizar la columna "fechaFin" en la base de datos
+            ContentValues values = new ContentValues();
+            values.put("fechaFin", fechaActual);
+            values.put("estado", 1);
+            db.update("TAREA", values, whereClause, whereArgs);
+
+
+            String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
+            String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio"));
+            String fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("fechaFin"));
+            long tiempoTranscurrido = calcularTiempoTranscurridoEnDias(fechaInicio, fechaFin);
+
+            // Mostrar un mensaje con el tiempo transcurrido en días
+            String mensaje = "La tarea '" + nombre + "' ha sido completada en " + tiempoTranscurrido + " días.";
+            Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel((int) idTarea);
+
+        }else {
+            ContentValues values = new ContentValues();
+            values.put("progreso", progreso);
+
+            db.update("TAREA", progresoValues, whereClause, whereArgs);
+        }
     }
+
+
+    private int calcularProgreso(int pos) {
+        int progreso = 0;
+        switch (pos) {
+            case 0:
+                progreso = 25;
+                break;
+            case 1:
+                progreso = 50;
+                break;
+            case 2:
+                progreso = 75;
+                break;
+            case 3:
+                progreso = 100;
+                break;
+        }
+        return progreso;
+    }
+
+
+    private String obtenerFechaActual() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Date fechaActual = new Date();
+        return dateFormat.format(fechaActual);
+    }
+
+    private SQLiteDatabase getWritableDatabase(Context context) {
+        BDManager dbHelper = new BDManager(context);
+        return dbHelper.getWritableDatabase();
+    }
+
 
     @Override
     public void onNothingSelected(AdapterView<?> arg0)
@@ -127,4 +217,3 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
     }
 
 }
-

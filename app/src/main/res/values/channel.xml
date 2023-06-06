@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="channel_id">1</integer>
+    <string name="channel_name">Nombre del Canal</string>
+    <string name="channel_description">Descripción del Canal</string>
+</resources>
