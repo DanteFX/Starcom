@@ -102,9 +102,8 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
         return 0;
     }
 
-    public void progressChange(int pos, ViewHolder holder) {
-        int progreso = calcularProgreso(pos);
-        holder.progreso.setProgress(progreso, true);
+    public void progressChange(int progreso, ViewHolder holder) {
+        holder.progreso.setProgress(progreso);
     }
 
     @Override
@@ -115,11 +114,11 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
         // Obtener el ID de la tarea actual
         int idTarea = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
 
-        // Calcular el progreso en función de las etapas
-        int progreso = calcularProgreso(pos);
-
         // Obtener el progreso actual en la base de datos
         int progresoActual = obtenerProgresoDesdeBaseDeDatos(idTarea);
+
+        // Calcular el progreso en función de las etapas
+        int progreso = calcularProgreso(pos);
 
         // Verificar si el progreso ha cambiado
         if (progreso != progresoActual) {
@@ -149,7 +148,7 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
                 long tiempoTranscurrido = calcularTiempoTranscurridoEnDias(fechaInicio, fechaFin);
 
                 // Mostrar un mensaje con el tiempo transcurrido en días
-                String mensaje = "La tarea '" + nombre + "' ha sido completada en " + tiempoTranscurrido + " días.";
+                String mensaje = "La tarea '" + nombre + "' ha sido completada en " + tiempoTranscurrido + " días";
                 Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
             } else {
                 // Actualizar el campo de progreso en la tabla "tareas" en la base de datos
@@ -159,6 +158,8 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
             }
         }
     }
+
+
 
     private int obtenerProgresoDesdeBaseDeDatos(int idTarea) {
         // Realizar una consulta a la base de datos para obtener el progreso actual de la tarea
@@ -182,16 +183,16 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
         int progreso = 0;
         switch (pos) {
             case 0:
-                progreso = 25;
+                progreso = 25; // Obtener el progreso para la posición 0 desde la base de datos
                 break;
             case 1:
-                progreso = 50;
+                progreso = 50; // Obtener el progreso para la posición 1 desde la base de datos
                 break;
             case 2:
-                progreso = 75;
+                progreso = 75; // Obtener el progreso para la posición 2 desde la base de datos
                 break;
             case 3:
-                progreso = 100;
+                progreso = 100; // Obtener el progreso para la posición 3 desde la base de datos
                 break;
         }
         return progreso;
@@ -224,4 +225,3 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
     }
 
 }
-
