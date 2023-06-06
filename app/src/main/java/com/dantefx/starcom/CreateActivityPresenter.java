@@ -81,7 +81,7 @@ public class CreateActivityPresenter extends Fragment {
                 long id = bdTareas.insertarTarea(nombre, descripcion, estado, prioridad, fechaEntrega, fechaInicio, recordatorio);
 
                 if (id > 0) {
-                    Toast.makeText(getContext(), "REGISTRO GUARDADO", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "TAREA GUARDADO", Toast.LENGTH_SHORT).show();
                     limpiar();
                     crearNotificacion(id, nombre, String.valueOf(recordatorio));
                     Cursor nuevoCursor = bdTareas.obtenerTareas();
@@ -89,7 +89,7 @@ public class CreateActivityPresenter extends Fragment {
                     // Actualizar el adaptador con el nuevo Cursor
                     //tareasAdapter.swapCursor(nuevoCursor);
                 } else {
-                    Toast.makeText(getContext(), "ERROR AL GUARDAR EL REGISTRO", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "ERROR AL GUARDAR LA TAREA", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -102,7 +102,7 @@ public class CreateActivityPresenter extends Fragment {
         String CHANNEL_ID = "my_channel_id";
 
         // Obtener el tiempo de recordatorio en milisegundos (suponiendo que está en minutos)
-        long tiempoRecordatorio = Long.parseLong(recordatorio) * 60 * 1000;
+        long tiempoRecordatorio = Long.parseLong(recordatorio) * 60 *60 * 1000;
 
         // Crear una intención para la notificación
         Intent intent = new Intent(getContext(), CreateActivityPresenter.class);
@@ -148,11 +148,11 @@ public class CreateActivityPresenter extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        spinnerRec = view.findViewById(R.id.idSpinner);
+        spinnerRec = view.findViewById(R.id.idSpinnerRecordatorio);
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this.getContext(), R.array.horas_array,
                 android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerRec.setAdapter(adapter);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRec.setAdapter(adapter1);
 
         pickDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -122,7 +122,7 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="50dp"
         android:layout_marginBottom="52dp"
-        android:text="Recordatorio"
+        android:text="Recordatorio en horas"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@id/idSpinner"
         app:layout_constraintEnd_toEndOf="parent"
@@ -130,7 +130,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
-        android:id="@+id/spinnerRecordatorio"
+        android:id="@+id/idSpinnerRecordatorio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="44dp"
