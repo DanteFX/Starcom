@@ -94,7 +94,7 @@ public class Administra extends BDManager {
         db.update(TABLE_TAREA, values, whereClause, whereArgs);
     }
 
-    public boolean actualizarTarea(int id, String nombre, String descripcion, String prioridad, String fechaEntrega) {
+    public boolean actualizarTarea(int id, String nombre, String descripcion, String prioridad, String fechaEntrega, int recordatorio) {
         BDManager dbHelper = new BDManager(context.getApplicationContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -104,6 +104,7 @@ public class Administra extends BDManager {
             values.put("descripcion", descripcion);
             values.put("prioridad", prioridad);
             values.put("fechaEntrega", fechaEntrega);
+            values.put("recordatorio", recordatorio);
 
             String whereClause = "id=?";
             String[] whereArgs = new String[]{String.valueOf(id)};
@@ -118,6 +119,7 @@ public class Administra extends BDManager {
             db.close();
         }
     }
+
 
 
     public long obtenerIdRegistroActual(ListView listView) {
