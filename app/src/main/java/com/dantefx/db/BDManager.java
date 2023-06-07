@@ -49,3 +49,4 @@ public class BDManager extends SQLiteOpenHelper {
     }
 
 }
+
