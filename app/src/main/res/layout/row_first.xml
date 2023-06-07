@@ -30,7 +30,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="300dp"
         android:layout_height="30dp"
-        android:progress="30"
+        android:progress="0"
         android:progressDrawable="@drawable/rounded_corners_progress_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

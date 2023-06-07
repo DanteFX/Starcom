@@ -17,7 +17,7 @@ public class relaxPresenter extends Fragment {
     private RelaxViewBinding binding;
     public MediaPlayer mp;
     private int num;
-
+    private AudioPlayer ap;
 
     @Override
     public View onCreateView(
@@ -26,7 +26,8 @@ public class relaxPresenter extends Fragment {
     ) {
 
         binding = RelaxViewBinding.inflate(inflater, container, false);
-        mp = MediaPlayer.create(this.getContext(), R.raw.relajacion);
+    //    mp = MediaPlayer.create(this.getContext(), R.raw.relajacion);
+        ap=new AudioPlayer(this.getContext(), R.raw.relajacion);
         return binding.getRoot();
 
     }
@@ -39,13 +40,14 @@ public class relaxPresenter extends Fragment {
             @Override
             public void onClick(View view) {
                 num+=1;
-                isPlaying();
+                isPlayingButton();
             }
         });
     }
 
     @Override
     public void onDestroyView() {
+        ap.stopPulse();
         super.onDestroyView();
         binding = null;
     }
@@ -55,15 +57,15 @@ public class relaxPresenter extends Fragment {
     }
 
 
-    public void isPlaying(){
-        if (num % 2 == 0) {
-            // tg.stopPulse();
-            mp.stop();
-            mp.seekTo(0);
+    public void isPlayingButton(){
+        if (ap.isPlaying()) {
+            ap.stopPulse();
             binding.buttonSecond.setImageResource(android.R.drawable.ic_media_play);
+
         }else{
-            mp.start();;
-            // tg.playPulse(98,2,40000);
+
+            ap.playPulse();
+
             binding.buttonSecond.setImageResource(android.R.drawable.ic_media_pause);
         }
     }

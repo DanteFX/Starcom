@@ -43,6 +43,8 @@ public class CreateActivityPresenter extends Fragment {
     private TextInputLayout campoNombre;
     private TextInputLayout campoDescripcion;
     private Spinner spinner;
+
+    private Spinner spinnerRec;
     int estado = 0;
 
     private TareasAdapter tareasAdapter;
@@ -61,7 +63,7 @@ public class CreateActivityPresenter extends Fragment {
                 String descripcion = campoDescripcion.getEditText().getText().toString();
                 String prioridad = spinner.getSelectedItem().toString();
                 String fechaEntrega = selectedDateTV.getText().toString();
-                int recordatorio = 1;
+                int recordatorio = Integer.parseInt(spinnerRec.getSelectedItem().toString());
 
 
                 // Agregar la fecha de inicio automaticamente desde el sistema
@@ -77,10 +79,10 @@ public class CreateActivityPresenter extends Fragment {
                 }
 
                 Administra bdTareas = new Administra(getContext());
-                  long id = bdTareas.insertarTarea(nombre, descripcion, estado, prioridad, fechaEntrega, fechaInicio, recordatorio);
+                long id = bdTareas.insertarTarea(nombre, descripcion, estado, prioridad, fechaEntrega, fechaInicio, recordatorio);
 
                 if (id > 0) {
-                    Toast.makeText(getContext(), "REGISTRO GUARDADO", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "TAREA GUARDADO", Toast.LENGTH_SHORT).show();
                     limpiar();
                     crearNotificacion(id, nombre, String.valueOf(recordatorio));
                     Cursor nuevoCursor = bdTareas.obtenerTareas();
@@ -88,7 +90,7 @@ public class CreateActivityPresenter extends Fragment {
                     // Actualizar el adaptador con el nuevo Cursor
                     //tareasAdapter.swapCursor(nuevoCursor);
                 } else {
-                    Toast.makeText(getContext(), "ERROR AL GUARDAR EL REGISTRO", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "ERROR AL GUARDAR LA TAREA", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -101,13 +103,12 @@ public class CreateActivityPresenter extends Fragment {
         String CHANNEL_ID = "my_channel_id";
 
         // Obtener el tiempo de recordatorio en milisegundos (suponiendo que está en minutos)
-        long tiempoRecordatorio = Long.parseLong(recordatorio) * 60 * 1000;
+        long tiempoRecordatorio = Long.parseLong(recordatorio) * 60 *60 * 1000;
 
         // Crear una intención para la notificación
         Intent intent = new Intent(getContext(), CreateActivityPresenter.class);
         intent.putExtra("tarea_id", tareaId);
         PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
         // Crear un canal de notificación (solo es necesario hacerlo una vez)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence channelName = "My Channel";
@@ -153,6 +154,11 @@ public class CreateActivityPresenter extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        spinnerRec = view.findViewById(R.id.idSpinnerRecordatorio);
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this.getContext(), R.array.horas_array,
+                android.R.layout.simple_spinner_item);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerRec.setAdapter(adapter1);
 
         pickDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,6 +195,7 @@ public class CreateActivityPresenter extends Fragment {
         campoNombre.getEditText().setText("");
         campoDescripcion.getEditText().setText("");
         spinner.setSelection(0);
+        spinnerRec.setSelection(0);
         selectedDateTV.setText("");
     }
 
