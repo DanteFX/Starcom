@@ -30,7 +30,8 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
 
     private Cursor cursor;
     private Context context;
-
+    private int selectedPosition = 0; // Variable para almacenar la posición seleccionada en el Spinner
+    private int initialPosition = 0; // Variable para almacenar la posición inicial en el Spinner
 
     public TareasProgressAdapter(Cursor cursor) {
         this.cursor = cursor;
@@ -45,8 +46,7 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
             super(itemView);
             tvNombre = itemView.findViewById(R.id.rowFirstText);
             progreso = itemView.findViewById(R.id.activeProgress);
-            etapa = itemView.findViewById(R.id.spinnerEtapa
-            );
+            etapa = itemView.findViewById(R.id.spinnerEtapa);
         }
     }
 
@@ -67,22 +67,104 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
 
             holder.tvNombre.setText(nombre);
 
-            // Obtener el progreso de la base de datos
+            // Obtener el progreso de la tarea actual
             int progreso = cursor.getInt(cursor.getColumnIndexOrThrow("progreso"));
 
             // Establecer el progreso en la barra de progreso
             holder.progreso.setProgress(progreso, true);
 
-        }
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
-                R.array.etapa, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        holder.etapa.setAdapter(adapter);
-        holder.etapa.setTag(holder);
-        holder.etapa.setOnItemSelectedListener(this);
+            // Establecer el adaptador del Spinner
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
+                    R.array.etapa, android.R.layout.simple_spinner_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            holder.etapa.setAdapter(adapter);
+            holder.etapa.setTag(holder);
+            holder.etapa.setOnItemSelectedListener(this);
 
+            // Guardar la posición inicial en el Spinner
+            if (position == 0) {
+                initialPosition = obtenerPosicionDesdeProgreso(progreso);
+            }
+        }
+
+        // Establecer la selección del Spinner
+        holder.etapa.setSelection(initialPosition);
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
+        ViewHolder holder = (ViewHolder) parent.getTag();
+
+        // Verificar si la posición seleccionada es diferente a la posición guardada
+        if (selectedPosition != pos) {
+            // Actualizar la variable selectedPosition
+            selectedPosition = pos;
+
+            // Obtener el progreso correspondiente a la posición seleccionada
+            int progreso = obtenerProgresoDesdePosicion(pos);
+
+            // Obtener el ID de la tarea actual
+            int idTarea = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+
+            if (pos == 3) {
+                // La tarea ha llegado a la etapa de "Fin"
+                String fechaActual = obtenerFechaActual();
+
+                // Actualizar la columna "fechaFin" en la base de datos
+                ContentValues values = new ContentValues();
+                values.put("progreso", progreso);
+                values.put("fechaFin", fechaActual);
+                values.put("estado", 1);
+                SQLiteDatabase db = getWritableDatabase(context);
+                String whereClause = "id=?";
+                String[] whereArgs = new String[]{String.valueOf(idTarea)};
+                db.update("TAREA", values, whereClause, whereArgs);
+
+                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
+                String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio"));
+                String fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("fechaFin"));
+                long tiempoTranscurrido = calcularTiempoTranscurridoEnDias(fechaInicio, fechaFin);
+
+                // Mostrar un mensaje con el tiempo transcurrido en días
+                String mensaje = "La tarea '" + nombre + "' ha sido completada en " + tiempoTranscurrido + " días.";
+                Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+
+
+            } else {
+                // Actualizar el progreso en la base de datos
+                actualizarProgresoEnBaseDeDatos(idTarea, progreso);
+            }
+
+            // Actualizar el progreso en la barra de progreso
+            holder.progreso.setProgress(progreso, true);
+        }
+    }
+
+
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // No se requiere ninguna acción cuando no se selecciona nada en el Spinner
+    }
+
+    private int obtenerPosicionDesdeProgreso(int progreso) {
+        int posicion = 0;
+        switch (progreso) {
+            case 25:
+                posicion = 0;
+                break;
+            case 50:
+                posicion = 1;
+                break;
+            case 75:
+                posicion = 2;
+                break;
+            case 100:
+                posicion = 3;
+                break;
+        }
+        return posicion;
+    }
 
     private long calcularTiempoTranscurridoEnDias(String fechaInicio, String fechaFin) {
         if (fechaInicio == null || fechaFin == null) {
@@ -102,76 +184,9 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
 
         return 0;
     }
-
-    public void progressChange(int pos,ViewHolder holder){
-        switch (pos) {
-            case 0:
-                holder.progreso.setProgress(25,true);
-                break;
-            case 1:
-                holder.progreso.setProgress(50,true);
-                break;
-            case 2:
-                holder.progreso.setProgress(75,true);
-                break;
-            case 3:
-                holder.progreso.setProgress(100,true);
-                break;
-        }
-
-    }
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
-        ViewHolder holder = (ViewHolder) parent.getTag();
-        progressChange(pos, holder);
-
-        // Obtener el ID de la tarea actual
-        int idTarea = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
-
-        // Calcular el progreso en función de las etapas
-        int progreso = calcularProgreso(pos);
-
-        // Actualizar el campo de progreso en la tabla "tareas" en la base de datos
-        ContentValues progresoValues = new ContentValues();
-        progresoValues.put("progreso", progreso);
-
-        String whereClause = "id=?";
-        String[] whereArgs = new String[]{String.valueOf(idTarea)};
-        SQLiteDatabase db = getWritableDatabase(context);
-        db.update("TAREA", progresoValues, whereClause, whereArgs);
-
-        if (pos == 3) {
-            // La tarea ha llegado a la etapa de "Cierre"
-            String fechaActual = obtenerFechaActual();
-
-            // Actualizar la columna "fechaFin" en la base de datos
-            ContentValues values = new ContentValues();
-            values.put("fechaFin", fechaActual);
-            values.put("estado", 1);
-            db.update("TAREA", values, whereClause, whereArgs);
-
-
-            String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
-            String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio"));
-            String fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("fechaFin"));
-            long tiempoTranscurrido = calcularTiempoTranscurridoEnDias(fechaInicio, fechaFin);
-
-            // Mostrar un mensaje con el tiempo transcurrido en días
-            String mensaje = "La tarea '" + nombre + "' ha sido completada en " + tiempoTranscurrido + " días.";
-            Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
-
-        }else {
-            ContentValues values = new ContentValues();
-            values.put("progreso", progreso);
-
-            db.update("TAREA", progresoValues, whereClause, whereArgs);
-        }
-    }
-
-
-    private int calcularProgreso(int pos) {
+    private int obtenerProgresoDesdePosicion(int posicion) {
         int progreso = 0;
-        switch (pos) {
+        switch (posicion) {
             case 0:
                 progreso = 25;
                 break;
@@ -188,6 +203,16 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
         return progreso;
     }
 
+    private void actualizarProgresoEnBaseDeDatos(int idTarea, int progreso) {
+        // Actualizar el campo de progreso en la tabla "tareas" en la base de datos
+        ContentValues progresoValues = new ContentValues();
+        progresoValues.put("progreso", progreso);
+
+        String whereClause = "id=?";
+        String[] whereArgs = new String[]{String.valueOf(idTarea)};
+        SQLiteDatabase db = getWritableDatabase(context);
+        db.update("TAREA", progresoValues, whereClause, whereArgs);
+    }
 
     private String obtenerFechaActual() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -200,15 +225,16 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
         return dbHelper.getWritableDatabase();
     }
 
-
-    @Override
-    public void onNothingSelected(AdapterView<?> arg0)
-    {
-
+    private SQLiteDatabase getReadableDatabase(Context context) {
+        BDManager dbHelper = new BDManager(context);
+        return dbHelper.getReadableDatabase();
     }
+
+
     @Override
     public int getItemCount() {
         return cursor != null ? cursor.getCount() : 0;
     }
 
 }
+
