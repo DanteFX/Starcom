@@ -85,7 +85,7 @@ public class CreateActivityPresenter extends Fragment {
                     Toast.makeText(getContext(), "TAREA GUARDADO", Toast.LENGTH_SHORT).show();
                     limpiar();
                     crearNotificacion(id, nombre, String.valueOf(recordatorio));
-                    Cursor nuevoCursor = bdTareas.obtenerTareas();
+                    //Cursor nuevoCursor = bdTareas.obtenerTareas();
 
                     // Actualizar el adaptador con el nuevo Cursor
                     //tareasAdapter.swapCursor(nuevoCursor);
@@ -118,13 +118,21 @@ public class CreateActivityPresenter extends Fragment {
             notificationManager.createNotificationChannel(channel);
         }
 
+        PendingIntent ignoreIntent = PendingIntent.getActivity(
+                getContext(),
+                0,
+                new Intent(),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
         // Construir la notificación
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
                 .setContentTitle("Recordatorio de tarea")
                 .setContentText("La tarea '" + nombreTarea + "' está pendiente")
                 .setSmallIcon(R.drawable.yoga48)
                 .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+                .addAction(R.drawable.ic_stat_name, "Ignorar", ignoreIntent);
+
 
         // Programar la notificación para el tiempo de recordatorio
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);

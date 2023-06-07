@@ -103,6 +103,7 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
     public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
         ViewHolder holder = (ViewHolder) parent.getTag();
 
+
         // Obtener la posición actual
         int currentPosition = parent.getPositionForView(v);
 
