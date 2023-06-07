@@ -2,6 +2,7 @@ package com.dantefx.starcom;
 
 import static com.dantefx.starcom.EditActivityPresenter.ARG;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -25,7 +26,7 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
     public TareasAdapter(Cursor cursor) {
         mCursor = cursor;
     }
-    private Context context;
+    private static Context context;
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvNombre;
         public TextView tvDescripcion;
@@ -34,7 +35,7 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
         public TextView tvFechaEntrega;
         public ImageButton buttonEditar;
 
-
+        
         public ImageButton buttonEliminar;
 
 
@@ -43,6 +44,25 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
 
             tvNombre = itemView.findViewById(R.id.texViewNombreTarea);
             tvDescripcion = itemView.findViewById(R.id.texViewDescripcionTarea);
+            // Agrega el OnClickListener al TextView
+            tvDescripcion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Obtén el texto completo de la descripción de la tarea
+                    String descripcionCompleta = tvDescripcion.getText().toString();
+
+                    // Crea un AlertDialog para mostrar el texto completo
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Descripción completa");
+                    builder.setMessage(descripcionCompleta);
+                    builder.setPositiveButton("Cerrar", null);
+
+                    // Muestra el cuadro de diálogo
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            });
+
             tvEstado = itemView.findViewById(R.id.checkboxTarea);
             tvPrioridad = itemView.findViewById(R.id.textViewPrioridad);
             tvFechaEntrega = itemView.findViewById(R.id.textViewFechaEntrega);
