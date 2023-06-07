@@ -93,6 +93,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/textView6" />
 
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="50dp"
+        android:layout_marginBottom="52dp"
+        android:text="Recordatorio en horas"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@id/idSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/idSpinnerRecordatorio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="44dp"
+        android:background="#1f84bf"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@id/textView7"
+        android:layout_marginBottom="-30dp"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
     <!--on below line we are creating
         a button for date picker-->
@@ -166,5 +190,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="294dp"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="116dp"
+        tools:layout_editor_absoluteY="395dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
