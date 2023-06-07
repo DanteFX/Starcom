@@ -17,6 +17,8 @@ public class sleepPresenter extends Fragment {
 
     public MediaPlayer mp;
     private int num=0;
+    private AudioPlayer ap;
+
 
 
     @Override
@@ -26,7 +28,8 @@ public class sleepPresenter extends Fragment {
     ) {
 
         binding = SleepViewBinding.inflate(inflater, container, false);
-        mp = MediaPlayer.create(this.getContext(), R.raw.suenio);
+      //  mp = MediaPlayer.create(this.getContext(), R.raw.suenio);
+        ap=new AudioPlayer(this.getContext(), R.raw.suenio);
         return binding.getRoot();
 
     }
@@ -39,13 +42,14 @@ public class sleepPresenter extends Fragment {
             @Override
             public void onClick(View view) {
                 num+=1;
-                isPlaying();
+                isPlayingButton();
             }
         });
     }
 
     @Override
     public void onDestroyView() {
+        ap.stopPulse();
         super.onDestroyView();
         binding = null;
     }
@@ -55,16 +59,15 @@ public class sleepPresenter extends Fragment {
     }
 
 
-    public void isPlaying(){
-        if (num % 2 == 0) {
-           // tg.stopPulse();
-            mp.stop();
-            mp.seekTo(0);
+    public void isPlayingButton(){
+        if (ap.isPlaying()) {
+            ap.stopPulse();
             binding.buttonSecond.setImageResource(android.R.drawable.ic_media_play);
+
         }else{
-            mp.start();;
-           // tg.playPulse(98,2,40000);
+            ap.playPulse();
             binding.buttonSecond.setImageResource(android.R.drawable.ic_media_pause);
+
         }
     }
 

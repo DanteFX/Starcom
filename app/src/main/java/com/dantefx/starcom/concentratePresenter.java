@@ -16,6 +16,7 @@ public class concentratePresenter extends Fragment {
     private ConcentrateViewBinding binding;
     public MediaPlayer mp;
     private int num=0;
+    private AudioPlayer ap;
 
 
     @Override
@@ -25,7 +26,8 @@ public class concentratePresenter extends Fragment {
     ) {
 
         binding = ConcentrateViewBinding.inflate(inflater, container, false);
-        mp = MediaPlayer.create(this.getContext(), R.raw.concentracion);
+        //mp = MediaPlayer.create(this.getContext(), R.raw.concentracion);
+        ap=new AudioPlayer(this.getContext(), R.raw.concentracion);
         return binding.getRoot();
 
     }
@@ -38,13 +40,14 @@ public class concentratePresenter extends Fragment {
             @Override
             public void onClick(View view) {
                 num+=1;
-                isPlaying();
+                isPlayingButton();
             }
         });
     }
 
     @Override
     public void onDestroyView() {
+        ap.stopPulse();
         super.onDestroyView();
         binding = null;
     }
@@ -54,16 +57,13 @@ public class concentratePresenter extends Fragment {
     }
 
 
-    public void isPlaying(){
-        if (num % 2 == 0) {
-            // tg.stopPulse();
-            mp.stop();
-            mp.seekTo(0);
+    public void isPlayingButton(){
+        if (ap.isPlaying()) {
+            ap.stopPulse();
             binding.buttonSecond.setImageResource(android.R.drawable.ic_media_play);
-        }else{
 
-            mp.start();;
-            // tg.playPulse(98,2,40000);
+        }else{
+            ap.playPulse();
             binding.buttonSecond.setImageResource(android.R.drawable.ic_media_pause);
         }
     }
