@@ -31,8 +31,7 @@ public class BDManager extends SQLiteOpenHelper {
                 "fechaInicio TEXT NOT NULL,"+
                 "fechaFin TEXT,"+
                 "progreso INTEGER,"+
-                "recordatorio INTEGER,"+
-                "usuario TEXT)");
+                "recordatorio INTEGER)");
     }
 
     @Override

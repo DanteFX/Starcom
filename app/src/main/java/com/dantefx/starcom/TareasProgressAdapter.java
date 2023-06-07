@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,8 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
     private Context context;
     private int selectedPosition = 0; // Variable para almacenar la posición seleccionada en el Spinner
     private int initialPosition = 0; // Variable para almacenar la posición inicial en el Spinner
+
+    private SparseArray<Integer> selectedPositions = new SparseArray<>();
 
     public TareasProgressAdapter(Cursor cursor) {
         this.cursor = cursor;
@@ -81,63 +84,68 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
             holder.etapa.setTag(holder);
             holder.etapa.setOnItemSelectedListener(this);
 
-            // Guardar la posición inicial en el Spinner
-            if (position == 0) {
-                initialPosition = obtenerPosicionDesdeProgreso(progreso);
-            }
-        }
+            // Obtener la posición actual
+            int currentPosition = position;
 
-        // Establecer la selección del Spinner
-        holder.etapa.setSelection(initialPosition);
+            // Guardar la posición seleccionada en el campo selectedPositions
+            selectedPositions.put(currentPosition, obtenerPosicionDesdeProgreso(progreso));
+
+            // Obtener la posición seleccionada almacenada en selectedPositions
+            int selectedPosition = selectedPositions.get(currentPosition, 0);
+
+            // Establecer la selección del Spinner utilizando la posición almacenada
+            holder.etapa.setSelection(selectedPosition);
+        }
     }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
         ViewHolder holder = (ViewHolder) parent.getTag();
 
-        // Verificar si la posición seleccionada es diferente a la posición guardada
-        if (selectedPosition != pos) {
-            // Actualizar la variable selectedPosition
-            selectedPosition = pos;
+        // Obtener la posición actual
+        int currentPosition = parent.getPositionForView(v);
 
-            // Obtener el progreso correspondiente a la posición seleccionada
-            int progreso = obtenerProgresoDesdePosicion(pos);
+        // Actualizar la posición seleccionada en el campo selectedPositions
+        selectedPositions.put(currentPosition, pos);
 
-            // Obtener el ID de la tarea actual
-            int idTarea = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+        // Obtener el progreso correspondiente a la posición seleccionada
+        int progreso = obtenerProgresoDesdePosicion(pos);
 
-            if (pos == 3) {
-                // La tarea ha llegado a la etapa de "Fin"
-                String fechaActual = obtenerFechaActual();
+        // Obtener el ID de la tarea actual
+        int idTarea = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
 
-                // Actualizar la columna "fechaFin" en la base de datos
-                ContentValues values = new ContentValues();
-                values.put("progreso", progreso);
-                values.put("fechaFin", fechaActual);
-                values.put("estado", 1);
-                SQLiteDatabase db = getWritableDatabase(context);
-                String whereClause = "id=?";
-                String[] whereArgs = new String[]{String.valueOf(idTarea)};
-                db.update("TAREA", values, whereClause, whereArgs);
+        if (pos == 3) {
+            // La tarea ha llegado a la etapa de "Fin"
+            String fechaActual = obtenerFechaActual();
 
-                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
-                String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio"));
-                String fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("fechaFin"));
-                long tiempoTranscurrido = calcularTiempoTranscurridoEnDias(fechaInicio, fechaFin);
+            // Actualizar la columna "fechaFin" en la base de datos
+            ContentValues values = new ContentValues();
+            values.put("progreso", progreso);
+            values.put("fechaFin", fechaActual);
+            values.put("estado", 1);
+            SQLiteDatabase db = getWritableDatabase(context);
+            String whereClause = "id=?";
+            String[] whereArgs = new String[]{String.valueOf(idTarea)};
+            db.update("TAREA", values, whereClause, whereArgs);
 
-                // Mostrar un mensaje con el tiempo transcurrido en días
-                String mensaje = "La tarea '" + nombre + "' ha sido completada en " + tiempoTranscurrido + " días.";
-                Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+            String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
+            String fechaInicio = cursor.getString(cursor.getColumnIndexOrThrow("fechaInicio"));
+            String fechaFin = cursor.getString(cursor.getColumnIndexOrThrow("fechaFin"));
+            long tiempoTranscurrido = calcularTiempoTranscurridoEnDias(fechaInicio, fechaFin);
+
+            // Mostrar un mensaje con el tiempo transcurrido en días
+            String mensaje = "La tarea '" + nombre + "' ha sido completada en " + tiempoTranscurrido + " días.";
+            Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
 
 
-            } else {
-                // Actualizar el progreso en la base de datos
-                actualizarProgresoEnBaseDeDatos(idTarea, progreso);
-            }
-
-            // Actualizar el progreso en la barra de progreso
-            holder.progreso.setProgress(progreso, true);
+        } else {
+            // Actualizar el progreso en la base de datos
+            actualizarProgresoEnBaseDeDatos(idTarea, progreso);
         }
+
+        // Actualizar el progreso en la barra de progreso
+        holder.progreso.setProgress(progreso, true);
     }
 
 
