@@ -97,12 +97,7 @@ public class MainActivity extends AppCompatActivity {
         binding.toolbar.setTitleTextColor(getResources().getColor(R.color.white));
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return true;
-    }
+
 
 
     @Override

@@ -4,30 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditActivityPresenter">
+    tools:context=".CreateActivityPresenter">
 
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="16dp"
         android:text="Nombre de la tarea"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@id/campoTareaLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginVertical="5dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/campoTareaLayout"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="145dp"
-        app:layout_constraintBottom_toTopOf="@id/textView4"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView2"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginVertical="50dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/campoTarea"
@@ -43,23 +45,19 @@
         android:layout_height="wrap_content"
         android:text="Descripcion"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@id/campoDescripcionLayout"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/campoTareaLayout"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginVertical="50dp"/>
-
-
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/campoDescripcionLayout"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="323dp"
-        app:layout_constraintBottom_toTopOf="@id/textView6"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView4"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginVertical="50dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/campoDescripcion"
@@ -73,129 +71,84 @@
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@id/idSpinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="296dp"
+        android:layout_marginTop="88dp"
         android:text="Prioridad"
-        android:layout_marginVertical="50dp"/>
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/campoDescripcionLayout" />
 
     <Spinner
-
         android:id="@+id/idSpinner"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="50dp"
-        android:layout_marginTop="4dp"
-        android:textColor="#FFFFFF"
+        android:layout_marginTop="68dp"
         android:background="#1f84bf"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.873"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@id/textView6" />
+
 
     <TextView
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="50dp"
-        android:layout_marginBottom="52dp"
+        android:layout_marginStart="4dp"
         android:text="Recordatorio en horas"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="@id/idSpinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView6" />
 
     <Spinner
         android:id="@+id/idSpinnerRecordatorio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="44dp"
+        android:layout_width="24dp"
+        android:layout_height="17dp"
+        android:layout_marginTop="16dp"
         android:background="#1f84bf"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="@id/textView7"
-        android:layout_marginBottom="-30dp"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-
-    <!--on below line we are creating
-        a button for date picker-->
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.147"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView7" />
 
     <TextView
         android:id="@+id/idTVSelectedDate"
         android:layout_width="231dp"
         android:layout_height="41dp"
-        android:layout_above="@id/idBtnPickDate"
-        android:layout_centerInParent="true"
-        android:layout_margin="20dp"
-        android:layout_marginBottom="116dp"
-        android:gravity="center"
-        android:padding="10dp"
+        android:layout_marginTop="68dp"
         android:text="Fecha de entrega"
-        android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/idBtnPickDate"
-        tools:layout_editor_absoluteX="1dp" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="50dp"
-        android:layout_marginBottom="52dp"
-        android:text="Recordatorio en horas"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="@id/idSpinner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Spinner
-        android:id="@+id/idSpinnerRecordatorio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="44dp"
-        android:background="#1f84bf"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="@id/textView7"
-        android:layout_marginBottom="-30dp"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/idSpinnerRecordatorio" />
 
     <ImageButton
         android:id="@+id/idBtnPickDate"
         android:layout_width="114dp"
         android:layout_height="88dp"
-        android:layout_centerInParent="true"
-        android:layout_margin="20dp"
-        android:layout_marginBottom="116dp"
+        android:layout_marginTop="32dp"
         android:background="#00FFFFFF"
         android:src="@drawable/calendar100"
-        android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/idBtnAgregar"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/idTVSelectedDate" />
 
     <ImageButton
         android:id="@+id/idBtnAgregar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="50dp"
-        android:layout_marginBottom="52dp"
+        android:layout_marginTop="8dp"
         android:background="#00FFFFFF"
         android:src="@drawable/save96"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="294dp"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="116dp"
-        tools:layout_editor_absoluteY="395dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

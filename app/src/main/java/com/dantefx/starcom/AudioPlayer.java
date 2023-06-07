@@ -18,6 +18,7 @@ public class AudioPlayer {
 
     public void playPulse(){
         if (!isPlaying()) {
+
             mp.start();
             Toast.makeText(context, "Puedes apagar la pantalla y seguir relajandote", Toast.LENGTH_SHORT).show();
         }
@@ -25,6 +26,7 @@ public class AudioPlayer {
     public void stopPulse(){
         mp.stop();
         mp.seekTo(0);
+        mp.release();
 
     }
 

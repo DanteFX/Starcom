@@ -82,10 +82,15 @@ public class EditActivityPresenter extends Fragment {
                 String fechaEntrega = selectedDateTV.getText().toString();
                 int recordatorio = Integer.parseInt(spinnerRec.getSelectedItem().toString());
 
+
+
+
+
                 // Obtener el ID del registro que se va a actualizar
                 Administra bdTareas = new Administra(getContext());
 
-                boolean actualizacionExitosa = bdTareas.actualizarTarea(position1, nombre, descripcion, prioridad, fechaEntrega);
+
+                boolean actualizacionExitosa = bdTareas.actualizarTarea(position1, nombre, descripcion, prioridad, fechaEntrega, recordatorio);
 
                 System.out.println(actualizacionExitosa);
 
@@ -106,7 +111,6 @@ public class EditActivityPresenter extends Fragment {
                 }
             }
         });
-
         return view;
     }
 
@@ -146,8 +150,8 @@ public class EditActivityPresenter extends Fragment {
         NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify((int) tareaId, builder.build());
     }
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
 
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         pickDateBtn = view.findViewById(R.id.idBtnPickDate);
         selectedDateTV = view.findViewById(R.id.idTVSelectedDate);
         campoNombre = view.findViewById(R.id.campoTareaLayout);
@@ -163,6 +167,7 @@ public class EditActivityPresenter extends Fragment {
                 android.R.layout.simple_spinner_item);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerRec.setAdapter(adapter1);
+
         pickDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,7 +203,6 @@ public class EditActivityPresenter extends Fragment {
         campoNombre.getEditText().setText("");
         campoDescripcion.getEditText().setText("");
         spinner.setSelection(0);
-        spinnerRec.setSelection(0);
         selectedDateTV.setText("");
     }
 
