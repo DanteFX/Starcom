@@ -237,4 +237,3 @@ public class TareasProgressAdapter extends RecyclerView.Adapter<TareasProgressAd
     }
 
 }
-

@@ -1,62 +1,88 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:stretchColumns="0,1,2,3,4,5,6"
+    android:columnCount="7"
+    android:rowCount="1"
     android:background="#2683D5">
 
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/texViewNombreTarea"
+        android:text="Nombre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_columnSpan="1"
+        android:layout_rowSpan="1"
+        android:gravity="center"
+        />
 
-        <TextView
-            android:id="@+id/texViewNombreTarea"
-            android:text="Nombre"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            />
+    <TextView
+        android:id="@+id/texViewDescripcionTarea"
+        android:text="Descripcion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="2"
+        android:layout_columnSpan="1"
+        android:layout_rowSpan="1"
+        android:gravity="center"
+        android:maxLines="4"
+        android:ellipsize="end"
+        />
 
-        <TextView
-            android:id="@+id/texViewDescripcionTarea"
-            android:text="Descripcion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:maxLines="4"/>
-        <CheckBox
-            android:id="@+id/checkboxTarea"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_column="2" />
+    <CheckBox
+        android:id="@+id/checkboxTarea"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_columnSpan="1"
+        android:layout_rowSpan="1"
+        android:gravity="center"
+        />
 
-        <TextView
-            android:id="@+id/textViewFechaEntrega"
-            android:text="01/09/23"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_column="3" />
-        <TextView
-            android:id="@+id/textViewPrioridad"
-            android:text="Alto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_column="4" />
+    <TextView
+        android:id="@+id/textViewFechaEntrega"
+        android:text="01/09/23"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_columnSpan="1"
+        android:layout_rowSpan="1"
+        android:gravity="center"
+        />
 
-        <ImageButton
-            android:id="@+id/imageButtonEditar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_column="5"
-            android:background="@null"
-            android:src="@drawable/drawing48" />
+    <TextView
+        android:id="@+id/textViewPrioridad"
+        android:text="Alto"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_columnSpan="1"
+        android:layout_rowSpan="1"
+        android:gravity="center"
+        />
 
-        <ImageButton
-            android:id="@+id/imageButtonEliminar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_column="6"
-            android:background="@null"
-            android:src="@android:drawable/ic_menu_delete" />
-    </TableRow>
+    <ImageButton
+        android:id="@+id/imageButtonEditar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_columnSpan="1"
+        android:layout_rowSpan="1"
+        android:background="@null"
+        android:src="@drawable/drawing48"
+        android:padding="8dp"
+        />
 
-</TableLayout>
+    <ImageButton
+        android:id="@+id/imageButtonEliminar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_columnSpan="1"
+        android:layout_rowSpan="1"
+        android:background="@null"
+        android:src="@android:drawable/ic_menu_delete"
+        android:padding="8dp"
+        />
+
+</GridLayout>
