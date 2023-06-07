@@ -113,6 +113,9 @@ public class TareasAdapter extends RecyclerView.Adapter<TareasAdapter.ViewHolder
                         int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
                         Administra bdTareas = new Administra(context);
                         bdTareas.borrarTarea(id);
+                        String mensaje = "La tarea '" + nombre + "' ha sido borrada";
+                        Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+                        swapCursor(bdTareas.obtenerTareas());
                     }
                 }
             });
