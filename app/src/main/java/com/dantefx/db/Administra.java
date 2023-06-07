@@ -16,7 +16,7 @@ public class Administra extends BDManager {
         this.context = context;
     }
 
-    public long insertarTarea(String nombre, String descripcion, int estado, String prioridad, String fechaEntrega, String fechaInicio, int recordatorio) {
+    public long insertarTarea(String nombre, String descripcion, int estado, String prioridad, String fechaEntrega, String fechaInicio, int recordatorio, int progreso) {
         long id = 0;
         try {
             BDManager BDManager = new BDManager(context.getApplicationContext());
@@ -31,6 +31,7 @@ public class Administra extends BDManager {
                 values.put("fechaEntrega", fechaEntrega);
                 values.put("fechaInicio", fechaInicio); // Agrega la fecha de inicio
                 values.put("recordatorio", recordatorio);
+                values.put("progreso", progreso);
                 id = db.insert(TABLE_TAREA, null, values);
             }
 
@@ -42,23 +43,28 @@ public class Administra extends BDManager {
 
 
 
+
     public Cursor obtenerTareas() {
         SQLiteDatabase db = getReadableDatabase();
-        String[] columnas = {"id as _id","nombre", "descripcion", "estado", "prioridad", "fechaEntrega"};
-        Cursor cursor = db.query(TABLE_TAREA, columnas, null, null, null, null, null);
+        String[] columnas = {"id as _id", "nombre", "descripcion", "estado", "prioridad", "fechaEntrega"};
+        String orderBy = "CASE WHEN prioridad = 'Alta' THEN 0 WHEN prioridad = 'Medio' THEN 1 ELSE 2 END";
+        Cursor cursor = db.query(TABLE_TAREA, columnas, null, null, null, null, orderBy);
         return cursor;
     }
 
-    public Cursor obtenerNombreTarea(){
+
+    public Cursor obtenerNombreTarea() {
         SQLiteDatabase db = getReadableDatabase();
         String[] columnas = {"id", "nombre", "fechaInicio", "fechaFin", "progreso"};
-        Cursor cursor = db.query(TABLE_TAREA, columnas, null, null, null, null, null);
+        String selection = "estado = ?";
+        String[] selectionArgs = {"0"};
+        Cursor cursor = db.query(TABLE_TAREA, columnas, selection, selectionArgs, null, null, null);
         return cursor;
     }
 
     public Cursor obtenerTarea(long id){
         SQLiteDatabase db = getReadableDatabase();
-        String[] columnas = {"id as _id","nombre", "descripcion", "estado", "prioridad", "fechaEntrega"};
+        String[] columnas = {"id","nombre", "descripcion", "estado", "prioridad", "fechaEntrega"};
         Cursor cursor = db.query(TABLE_TAREA, columnas, null, null, null, null, null);
         return cursor;
     }
@@ -68,6 +74,8 @@ public class Administra extends BDManager {
         String[] whereArgs = new String[]{String.valueOf(id)};
         db.delete(TABLE_TAREA, whereClause, whereArgs);
     }
+
+
 
     public void borrarTodasLasTareas() {
         SQLiteDatabase db = getWritableDatabase();
